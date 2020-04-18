@@ -1,0 +1,36 @@
+\\\===== kubeadm way to istall cluster ============
+
+# install docker on allmachine
+-- master and slave nides
+
+
+#run these commands on both master and slave noeds:
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+sudo apt-get update
+sudo apt-get install -y kubelet kubeadm kubectl
+sudo apt-mark hold kubelet kubeadm kubectl
+
+# configure kubeadm -------
+
+kubeadm init --apiserver-advertise-address=172.31.19.109 --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=NumCPU
+
+# pod network cidr is for identifying the pod type we will be using on our kuberneteds pod under the cluster, ignoring the error for the study purpose as it is because of the lo instance we have chosed  
+
+
+# run the join command on the node -----
+kubeadm join 172.31.19.109:6443 --token bdxrmd.k19qyby4fktk8x5x \
+    --discovery-token-ca-cert-hash sha256:2821c23bf4baed6e4d6927549a556247d04165209289a9348b56779683319a74
+
+ # run below commands as a normal user on master
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+ # set up pod network ---
+
+for calico : 
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
