@@ -32,5 +32,11 @@ kubeadm join 172.31.19.109:6443 --token bdxrmd.k19qyby4fktk8x5x \
 
  # set up pod network ---
 
-for calico : 
+for calico : # this opens the dns 
 kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+
+#Download Calico 
+wget https://docs.projectcalico.org/v3.3/getting-started/kubernetes/ installation/hosted/rbac-kdd.yaml wget https://docs.projectcalico.org/v3.3/getting-started/kubernetes/ installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml 
+kubeadm init --pod-network-cidr=192.168.0.0/16 
+kubectl apply -f rbac-kdd.yaml
+kubectl apply -f calico.yaml 
