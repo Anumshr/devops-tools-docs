@@ -40,3 +40,8 @@ wget https://docs.projectcalico.org/v3.3/getting-started/kubernetes/ installatio
 kubeadm init --pod-network-cidr=192.168.0.0/16 
 kubectl apply -f rbac-kdd.yaml
 kubectl apply -f calico.yaml 
+
+# getting rid of the error : 0/2 nodes are available: 2 node(s) had taints that the pod didn't tolerate: 
+#You can run below command to remove the taint from master node and then you should be able to deploy your pod on that node
+
+kubectl taint nodes  <nodename> node-role.kubernetes.io/master-
