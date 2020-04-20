@@ -45,3 +45,7 @@ kubectl apply -f calico.yaml
 #You can run below command to remove the taint from master node and then you should be able to deploy your pod on that node
 
 kubectl taint nodes  <nodename> node-role.kubernetes.io/master-
+
+#And don't forget to do the following command to enable scheduling on the created cluster:
+
+kubectl taint nodes --all node-role.kubernetes.io/master-
